@@ -1,6 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
+// Import Swiper styles
+import 'swiper/css';
+import "@szhsin/react-menu/dist/index.css";
+//
 import App from './App';
 import { BrowserRouter as Router } from "react-router-dom"
 

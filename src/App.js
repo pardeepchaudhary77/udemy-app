@@ -6,7 +6,7 @@ function App() {
   return (
     <>
       <Header />
-      <main>
+      <main className="bg-white dark:bg-gray-800">
         <Routes>
           <Route path="/" element={<Home />} />
         </Routes>
