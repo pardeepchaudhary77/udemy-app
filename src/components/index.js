@@ -6,6 +6,7 @@ export { default as Footer } from "./_layout/Footer"
 export { default as ProfileElement } from "./_element/ProfileElement"
 export { default as CategoriesEle } from "./_element/CategoriesEle"
 export { default as CategoriesEleLevel2 } from "./_element/CategoriesEleLevel2"
+export { default as ScrollToTop } from "./_element/ScrollToTop"
 
 
 //Sections
