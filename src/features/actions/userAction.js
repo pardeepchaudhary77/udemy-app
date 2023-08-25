@@ -1,10 +1,13 @@
 import app from "../../firebase/Config"
 
-
-export const createUser = (email, password) => async(dispatch) => {
+export const createUser = (data) => async(dispatch) => {
+    const res = "asd" 
     try{
-        //await 
+        dispatch({
+            type: "CREATE_USER",
+            payload: res
+        }) 
     }catch(error){
-
+        console.log(error)
     }
 }

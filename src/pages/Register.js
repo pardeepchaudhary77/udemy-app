@@ -1,7 +1,11 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { toast } from "react-toastify"
+import { useDispatch, useSelector } from "react-redux"
+import { createUser } from "../features/actions/userAction"
 
 function Register() {
+    const state = useSelector(state => state.user)
+    const dispatch = useDispatch()
     const DATA = {
         name:"",
         email:"",
@@ -13,16 +17,22 @@ function Register() {
         setForm({...form, [e.target.name]:e.target.value})
     }
 
+    useEffect(() => {
+        console.log("PK", state)
+    })
+
     const handelRegister=(e)=>{
         e.preventDefault()
         if(form.name === "" && form.email === "" && form.password === ""){
             toast.error("All fields are required")
         }else if(form.password !== e.target.repassword.value){
-            toast.error("All required")
+            toast.error("Password dosen't match.")
         }else{
-            console.log(form)
+            //console.log(form)
+            return dispatch(createUser(form))
         }
     }
+    //console.log("PK", state)
 
   return (
     <form className="mx-auto w-full max-w-screen-sm lg:p-8" onSubmit={handelRegister}>
@@ -78,7 +88,7 @@ function Register() {
             Re-password
             </label>
             <input
-            type="repassword"
+            type="password"
             id="repassword" name="repassword"
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             required=""
