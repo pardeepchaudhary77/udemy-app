@@ -2,7 +2,7 @@ import React from 'react'
 
 function Login() {
   return (
-    <form>
+    <form className="mx-auto w-full max-w-screen-sm lg:p-8">
         <div className="mb-6">
             <label
             htmlFor="email"

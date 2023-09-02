@@ -1,5 +1,0 @@
-export const CREATE_USER="CREATE_USER"
-export const GET_USER="GET_USER"
-export const ERROR_USER="ERROR_USER"
-export const SIGNOUT="SIGNOUT"
-export const UPDATE_USER="UPDATE_USER"

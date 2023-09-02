@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react"
 import { toast } from "react-toastify"
 import { useDispatch, useSelector } from "react-redux"
-import { createUser } from "../features/actions/userAction"
+import { useNavigate } from "react-router-dom"
+import { createUser } from "../features/slice/userSlice"
 
-function Register() {
-    const state = useSelector(state => state.user)
+function Register({create, user}) {
+    //const state = useSelector(state => state.user)
     const dispatch = useDispatch()
+    const navigate = useNavigate()
     const DATA = {
-        name:"",
+        fullname:"",
         email:"",
         password:""
     }
@@ -18,18 +20,18 @@ function Register() {
     }
 
     useEffect(() => {
-        console.log("PK", state)
-    })
-
+       
+    },[])
+    
     const handelRegister=(e)=>{
         e.preventDefault()
-        if(form.name === "" && form.email === "" && form.password === ""){
+        if(form.fullname === "" && form.email === "" && form.password === ""){
             toast.error("All fields are required")
         }else if(form.password !== e.target.repassword.value){
             toast.error("Password dosen't match.")
         }else{
-            //console.log(form)
-            return dispatch(createUser(form))
+            //console.log(form.fullname, form.email, form.password)
+            return dispatch(createUser(form));
         }
     }
     //console.log("PK", state)
@@ -44,7 +46,7 @@ function Register() {
             Your Name
             </label>
             <input
-            type="text" value={form.name} onChange={handelChange} name="name"
+            type="text" value={form.fullname} onChange={handelChange} name="fullname"
             id="fullname"
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             placeholder="Full Name"
@@ -103,5 +105,6 @@ function Register() {
         </form>
   )
 }
+
 
 export default Register
