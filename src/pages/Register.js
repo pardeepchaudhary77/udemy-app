@@ -2,10 +2,10 @@ import { useEffect, useState } from "react"
 import { toast } from "react-toastify"
 import { useDispatch, useSelector } from "react-redux"
 import { useNavigate } from "react-router-dom"
-import { createUser } from "../features/slice/userSlice"
+import { createUser } from "../features/actions/userAction"
 
-function Register({create, user}) {
-    //const state = useSelector(state => state.user)
+function Register() {
+    const {loading, error, success} = useSelector(state => state.user)
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const DATA = {
@@ -19,9 +19,6 @@ function Register({create, user}) {
         setForm({...form, [e.target.name]:e.target.value})
     }
 
-    useEffect(() => {
-       
-    },[])
     
     const handelRegister=(e)=>{
         e.preventDefault()
@@ -30,14 +27,20 @@ function Register({create, user}) {
         }else if(form.password !== e.target.repassword.value){
             toast.error("Password dosen't match.")
         }else{
-            //console.log(form.fullname, form.email, form.password)
-            return dispatch(createUser(form));
+            form.email = form.email.toLowerCase()
+            dispatch(createUser(form));
         }
     }
-    //console.log("PK", state)
+
+    useEffect(() => {
+        if(success) navigate("/")
+    },[success, navigate])
 
   return (
     <form className="mx-auto w-full max-w-screen-sm lg:p-8" onSubmit={handelRegister}>
+        {error && <div className="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
+                {error.message}
+            </div>}
         <div className="mb-6">
             <label
             htmlFor="fullname"
@@ -100,7 +103,7 @@ function Register({create, user}) {
             type="submit"
             className="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-none text-sm px-5 py-2.5 mr-2 border dark:border-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
         >
-            Register
+           {loading ? "..." : "Register"} 
         </button>
         </form>
   )

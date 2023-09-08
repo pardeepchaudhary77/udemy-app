@@ -2,13 +2,22 @@ import { auth } from "../../firebase/Config"
 import { createUserWithEmailAndPassword } from "firebase/auth"
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
-// export const createUser = createAsyncThunk(
-//     "users/create",
-//     async(name, email, password) => {
-//         const res = await ({ name, email, password });
-//         return res.data;
-//     }
-// )
+export const createUser = createAsyncThunk(
+    "user/create",
+    async(data, { rejectWithValue }) => {
+        try{
+            await createUserWithEmailAndPassword(auth, data.email, data.password)
+                .then((result) => {
+                    result.user.displayName = data.name
+                }).then(data => {
+                    const token = data.user?.getIdToken();
+                    console.log(token)
+                })
+        }catch(error){
+            return rejectWithValue(error)
+        }
+    }
+)
 
 // export const createUser = (name, email, password) => async(dispatch) => {
 //     const res = await createUserWithEmailAndPassword(auth, email,password)

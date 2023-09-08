@@ -1,30 +1,39 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { auth } from "../../firebase/Config"
-import { createUserWithEmailAndPassword } from "firebase/auth"
+import { createUser } from "../actions/userAction"
+
+const initialState = {
+    loading: false,
+    userInfo: null,
+    userToken: null,
+    error: null,
+    success: false,
+  }
 
 const userSlice = createSlice({
     name: "user",
-    initialState: {
-        user:null
-    },
+    initialState,
     reducers:{
-        async createUser(state, action) {
-            //state.user = (action.payload.email);
-            const res = await createUserWithEmailAndPassword(auth, action.payload.email,action.payload.password)
-                        .then((result) => {
-                            result.user.displayName = action.payload.name
-                        }).catch(error => console.log(error))
-            return { ...state, user: res }
+    },
+    extraReducers:{
+        [createUser.pending]: (state) => {
+            state.loading = true
+            state.error = null
+            state.userInfo = null
         },
-        signIn(state, action){
-
+        [createUser.fulfilled]: (state, { payload }) => {
+            state.loading = false
+            state.success = true // registration successful
+            state.userInfo = payload
         },
-        signOut(state, action){
-
+        [createUser.rejected]: (state, { payload }) => {
+            state.loading = false
+            state.error = payload
+            state.userInfo = payload
         }
     }
 })
 
-export const { createUser, signIn, signOut } = userSlice.actions
+
+//export const { createUser, signIn, signOut } = userSlice.actions
 
 export const userReducer = userSlice.reducer 
