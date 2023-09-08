@@ -1,50 +1,70 @@
 import { auth } from "../../firebase/Config"
-import { createUserWithEmailAndPassword } from "firebase/auth"
-import { createAsyncThunk } from "@reduxjs/toolkit";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "firebase/auth"
 
-export const createUser = createAsyncThunk(
-    "user/create",
-    async(data, { rejectWithValue }) => {
-        try{
-            await createUserWithEmailAndPassword(auth, data.email, data.password)
-                .then((result) => {
-                    result.user.displayName = data.name
-                }).then(data => {
-                    const token = data.user?.getIdToken();
-                    console.log(token)
+export const LOGIN_REQUEST = "LOGIN_REQUEST";
+export const LOGIN_SUCCESS = "LOGIN_SUCCESS";
+export const LOGIN_FAILURE = "LOGIN_FAILURE";
+
+export const LOGOUT_REQUEST = "LOGOUT_REQUEST";
+export const LOGOUT_SUCCESS = "LOGOUT_SUCCESS";
+export const LOGOUT_FAILURE = "LOGOUT_FAILURE";
+
+export const VERIFY_REQUEST = "VERIFY_REQUEST";
+export const VERIFY_SUCCESS = "VERIFY_SUCCESS";
+export const NO_USER = "NO_USER";
+
+export const createUser = (data) => async(dispatch) => {
+    dispatch({type: LOGIN_REQUEST})
+    try{    
+        await createUserWithEmailAndPassword(auth, data.email, data.password)
+                .then(async(result) => {
+                    await updateProfile(auth.currentUser, {displayName: data.name}).then(() => {
+                        return (
+                            dispatch({
+                                type: LOGIN_SUCCESS
+                            })
+                        )
+                    })
+                    
                 })
-        }catch(error){
-            return rejectWithValue(error)
-        }
-    }
-)
-
-// export const createUser = (name, email, password) => async(dispatch) => {
-//     const res = await createUserWithEmailAndPassword(auth, email,password)
-//                 .then((result) => {
-//                     result.user.displayName = name
-//                 })
-//     try{
         
-//         // const res = await app.auth().createUserWithEmailAndPassword(email, password)
-//         //         .then((result) => {
-//         //             result.user.updateProfile({
-//         //                 displayName: name
-//         //             })
-//         //         }).then((result)=>{
-//         //             app.firestore().collection("users").doc(app.auth().currentUser.uid).set({
-//         //                 displayName: name,
-//         //                 role: 0,
-//         //             })
-//         //         })
-//         dispatch({
-//             type: "CREATE_USER",
-//             payload: res
-//         }) 
-//     }catch(error){
-//         dispatch({
-//             type: "ERROR_MESSAGE",
-//             payload: error.message
-//         })
-//     }
-// }
+    }catch(error){
+        dispatch({
+            type: LOGIN_FAILURE,
+            payload: error.message
+        })
+    }
+}
+
+export const loginUser = (data) => async(dispatch) =>{
+    dispatch({type: LOGIN_REQUEST})
+    try{
+        await signInWithEmailAndPassword(auth, data.email, data.password)
+                .then(result => {
+                    dispatch({type: LOGIN_SUCCESS})
+                })
+    }catch(error){
+        dispatch({type: LOGIN_FAILURE, payload: error.message})
+    }
+} 
+
+export const verifyAuth = () => dispatch => {
+    dispatch({type: VERIFY_REQUEST})
+    auth.onAuthStateChanged(user => {
+      if (user !== null) {
+        dispatch({type: VERIFY_SUCCESS, payload: user});
+      }else{
+        dispatch({type: NO_USER});
+      }        
+    });
+  };
+
+export const signOutUser = () => async(dispatch) => {
+    dispatch({type: LOGOUT_REQUEST})
+
+    const result = await auth.signOut()
+    dispatch({
+        type:LOGOUT_SUCCESS,
+        payload: result
+    })
+}

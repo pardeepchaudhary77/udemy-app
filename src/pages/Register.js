@@ -3,9 +3,10 @@ import { toast } from "react-toastify"
 import { useDispatch, useSelector } from "react-redux"
 import { useNavigate } from "react-router-dom"
 import { createUser } from "../features/actions/userAction"
+import { auth } from "../firebase/Config"
 
 function Register() {
-    const {loading, error, success} = useSelector(state => state.user)
+    const {error, isAuthenticated} = useSelector(state => state.user)
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const DATA = {
@@ -33,13 +34,17 @@ function Register() {
     }
 
     useEffect(() => {
-        if(success) navigate("/")
-    },[success, navigate])
+        if (isAuthenticated) {
+            navigate("/")
+        } else {
+            console.log("")
+        }
+    },[isAuthenticated, navigate])
 
   return (
     <form className="mx-auto w-full max-w-screen-sm lg:p-8" onSubmit={handelRegister}>
         {error && <div className="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
-                {error.message}
+                {error}
             </div>}
         <div className="mb-6">
             <label
@@ -103,7 +108,7 @@ function Register() {
             type="submit"
             className="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-none text-sm px-5 py-2.5 mr-2 border dark:border-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
         >
-           {loading ? "..." : "Register"} 
+           Register
         </button>
         </form>
   )

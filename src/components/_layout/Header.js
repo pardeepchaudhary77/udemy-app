@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react"
 import { CategoriesEle, ProfileElement } from "../index"
 import { Link } from "react-router-dom"
+import { useSelector } from "react-redux"
+
 function Header() {
   const [theme, setTheme] = useState(JSON.parse(localStorage.getItem("theme")) || false)
   const [profileEle, setProfileEle] = useState(false)
-  const [categoryEle, setCategoryEle] = useState(false)
+  const {isAuthenticated, user} = useSelector(state => state.user)
 
   useEffect(() => {
     localStorage.setItem("theme", JSON.stringify(theme))
@@ -137,21 +139,10 @@ function Header() {
           </svg>
         </button>
       </div>
-      <div className="flex md:order-3">
-        <Link to="/login"
-            className="py-2.5 px-5 mr-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-none border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
-          >
-            Log in
-          </Link>
-          <Link to="/register"
-            className="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-none text-sm px-5 py-2.5 mr-2 border dark:border-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
-          >
-            Sign up
-          </Link>
-      </div>
-      <div className="flex md:order-3 items-center">
-        <Link className="block py-2 mr-3 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Instructor</Link>
-        <Link className="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">My learning</Link>
+      {isAuthenticated ? 
+        <div className="flex md:order-3 items-center">
+        {/* <Link className="block py-2 mr-3 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Instructor</Link>
+        <Link className="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">My learning</Link> */}
         <i className="bi dark:text-white cursor-pointer bi-heart font-extrabold text-lg px-3"></i>
         <i className="bi dark:text-white cursor-pointer bi-cart2 font-extrabold text-lg px-3"></i>
         <i className="bi dark:text-white cursor-pointer bi-bell font-extrabold text-lg px-3"></i>
@@ -159,8 +150,22 @@ function Header() {
           <i className="bi bi-brightness-high-fill"></i>          
         </button>
         <div onMouseOver={() => setProfileEle(true)} className="w-9 h-9 justify-center cursor-pointer flex items-center text-white rounded-full px-3 bg-stone-950">PK</div>
-        {profileEle && <ProfileElement setProfileEle={setProfileEle} />}
-      </div>
+        {profileEle && <ProfileElement user={user} setProfileEle={setProfileEle} />}
+      </div> :
+      <div className="flex md:order-3">
+      <Link to="/login"
+          className="py-2.5 px-5 mr-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-none border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
+        >
+          Log in
+        </Link>
+        <Link to="/register"
+          className="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-none text-sm px-5 py-2.5 mr-2 border dark:border-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
+        >
+          Sign up
+        </Link>
+    </div>}
+      
+      
     </div>
   </nav>
   )

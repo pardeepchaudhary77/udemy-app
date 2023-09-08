@@ -1,6 +1,9 @@
+import { useDispatch } from "react-redux"
 import { Link } from "react-router-dom"
+import { signOutUser } from "../../features/actions/userAction"
 
-function ProfileElement({setProfileEle}) {
+function ProfileElement({setProfileEle, user}) {
+  const dispatch = useDispatch()
   return (
     <div onMouseOver={()=>setProfileEle(true)}
         onMouseOut={()=>setProfileEle(false)}
@@ -8,8 +11,8 @@ function ProfileElement({setProfileEle}) {
     className="z-10 absolute right-3 top-20 bg-white divide-y shadow-lg border dark:border-gray-600 divide-gray-100 w-56 dark:bg-gray-700 dark:divide-gray-600"
   >
     <div className="px-4 py-3 text-sm text-gray-900 dark:text-white">
-      <div>Bonnie Green</div>
-      <div className="font-medium truncate">name@flowbite.com</div>
+      <div>{user?.displayName}</div>
+      <div className="font-medium truncate">{user.email}</div>
     </div>
     <ul
       className="py-2 text-sm text-gray-700 dark:text-gray-200"
@@ -112,7 +115,7 @@ function ProfileElement({setProfileEle}) {
         </Link>
       </li>
       <li>
-        <Link
+        <Link onClick={() => dispatch(signOutUser()) && setProfileEle(false)}
           className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
           Log out
         </Link>
@@ -121,5 +124,7 @@ function ProfileElement({setProfileEle}) {
   </div>
   )
 }
+
+
 
 export default ProfileElement
